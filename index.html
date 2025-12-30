@@ -3,95 +3,54 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CBT FYP Preview</title>
+<title>CBT Learning – Raw 15s</title>
 
 <style>
-body {
+html, body {
   margin: 0;
-  background: #000;
+  padding: 0;
+  background: black;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* TikTok frame */
-.container {
-  position: relative;
+.video-frame {
   width: 360px;
   height: 640px;
-  overflow: hidden;
   background: black;
 }
 
-/* Video zoom */
 video {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1.08);
-}
-
-/* Overlay text */
-.overlay {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  color: white;
-  font-weight: bold;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.8);
-  padding: 12px;
-  box-sizing: border-box;
-}
-
-#hook {
-  top: 40%;
-  font-size: 26px;
-  display: none;
-}
-
-#cta {
-  bottom: 40px;
-  font-size: 22px;
-  color: yellow;
-  display: none;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <video id="vid" autoplay muted playsinline>
-    <source src="video.mp4" type="video/mp4">
-  </video>
-
-  <div id="hook" class="overlay">
-    CBT MANUAL ITU<br>SUDAH KETINGGALAN
-  </div>
-
-  <div id="cta" class="overlay">
-    KOMENTAR “CBT”
+<div class="wrapper">
+  <div class="video-frame">
+    <video id="video" controls autoplay muted playsinline>
+      <source src="videos/CBT%20learning%20Tool3.mp4" type="video/mp4">
+      Your browser does not support HTML5 video.
+    </video>
   </div>
 </div>
 
 <script>
-const video = document.getElementById("vid");
-const hook = document.getElementById("hook");
-const cta  = document.getElementById("cta");
+const video = document.getElementById("video");
 
 video.addEventListener("timeupdate", () => {
-  const t = video.currentTime;
-
-  // Hook 0–2s
-  hook.style.display = (t >= 0 && t <= 2) ? "block" : "none";
-
-  // CTA 12–15s
-  cta.style.display = (t >= 12 && t <= 15) ? "block" : "none";
-
-  // Stop at 15s
-  if (t >= 15) {
+  if (video.currentTime >= 15) {
     video.pause();
   }
 });
