@@ -3,46 +3,152 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CBT Learning – Part 1</title>
+<title>CBT Learning – FYP 15s</title>
 
 <style>
-html,body{margin:0;background:black;height:100%}
-.wrapper{display:flex;justify-content:center;align-items:center;height:100vh}
-.frame{position:relative;width:360px;height:640px;overflow:hidden}
-video{width:100%;height:100%;object-fit:cover;transition:transform .15s}
-.overlay{position:absolute;width:100%;text-align:center;font-weight:bold;
-text-shadow:0 2px 8px rgba(0,0,0,.85);display:none;padding:12px}
-#hook{top:40%;font-size:26px;color:white}
-#cta{bottom:40px;font-size:22px;color:yellow}
+html, body {
+  margin: 0;
+  padding: 0;
+  background: black;
+  width: 100%;
+  height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.video-frame {
+  position: relative;
+  width: 360px;
+  height: 640px;
+  background: black;
+  overflow: hidden;
+}
+
+video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.15s linear;
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.85);
+  padding: 12px;
+  box-sizing: border-box;
+  display: none;
+}
+
+/* Hook */
+#hook {
+  top: 40%;
+  font-size: 26px;
+  color: white;
+}
+
+/* Subtitle */
+#subtitle {
+  bottom: 90px;
+  font-size: 20px;
+  color: white;
+  background: rgba(0,0,0,0.55);
+  border-radius: 10px;
+  margin: 0 14px;
+}
+
+/* CTA */
+#cta {
+  bottom: 40px;
+  font-size: 22px;
+  color: yellow;
+}
 </style>
 </head>
 
 <body>
+
 <div class="wrapper">
-<div class="frame">
+  <div class="video-frame">
 
-<video id="v" controls preload="metadata" playsinline>
-  <source src="videos/CBT%20learning%20Tool3.mp4" type="video/mp4">
-</video>
+    <video id="video" controls preload="metadata" playsinline>
+      <source src="videos/CBT%20learning%20Tool3.mp4" type="video/mp4">
+    </video>
 
-<div id="hook" class="overlay">CBT MANUAL ITU<br>SUDAH KETINGGALAN</div>
-<div id="cta" class="overlay">LANJUT PART 2 →</div>
+    <div id="hook" class="overlay">
+      CBT MANUAL ITU<br>SUDAH KETINGGALAN
+    </div>
 
-</div>
+    <div id="subtitle" class="overlay"></div>
+
+    <div id="cta" class="overlay">
+      KOMENTAR “CBT”
+    </div>
+
+  </div>
 </div>
 
 <script>
-const v=document.getElementById("v");
-const hook=document.getElementById("hook");
-const cta=document.getElementById("cta");
+const video = document.getElementById("video");
+const hook = document.getElementById("hook");
+const subtitle = document.getElementById("subtitle");
+const cta = document.getElementById("cta");
 
-v.addEventListener("timeupdate",()=>{
-  const t=v.currentTime;
-  hook.style.display=(t<=2)?"block":"none";
-  cta.style.display=(t>=12)?"block":"none";
-  v.style.transform=(t>6)?"scale(1.06)":"scale(1)";
-  if(t>=15)v.pause();
+/* Subtitle timeline */
+const subtitles = [
+  { start: 2, end: 4, text: "Bikin soal CBT manual itu ribet." },
+  { start: 4, end: 6, text: "Setting jawaban, scoring, waktu…" },
+  { start: 6, end: 9, text: "Di sini semuanya dipercepat." },
+  { start: 9, end: 12, text: "Trainer & guru sudah pakai ini." }
+];
+
+/* Zoom moments */
+const zoomPoints = [
+  { time: 0, scale: 1.06 },
+  { time: 6, scale: 1.07 },
+  { time: 12, scale: 1.06 }
+];
+
+video.addEventListener("timeupdate", () => {
+  const t = video.currentTime;
+
+  /* Hook */
+  hook.style.display = (t <= 2) ? "block" : "none";
+
+  /* Subtitle */
+  let active = subtitles.find(s => t >= s.start && t <= s.end);
+  if (active) {
+    subtitle.textContent = active.text;
+    subtitle.style.display = "block";
+  } else {
+    subtitle.style.display = "none";
+  }
+
+  /* CTA */
+  cta.style.display = (t >= 12 && t <= 15) ? "block" : "none";
+
+  /* Zoom */
+  zoomPoints.forEach(z => {
+    if (Math.abs(t - z.time) < 0.15) {
+      video.style.transform = `scale(${z.scale})`;
+    }
+  });
+
+  /* Stop at 15s */
+  if (t >= 15) {
+    video.pause();
+  }
 });
 </script>
+
 </body>
 </html>
