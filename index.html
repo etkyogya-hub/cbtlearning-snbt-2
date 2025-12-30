@@ -61,6 +61,16 @@ video {
   font-size: 22px;
   color: yellow;
 }
+
+/* Subtitle */
+#subtitle {
+  bottom: 90px;
+  font-size: 20px;
+  color: white;
+  background: rgba(0,0,0,0.55);
+  border-radius: 10px;
+  margin: 0 14px;
+}
 </style>
 </head>
 
@@ -71,12 +81,13 @@ video {
 
     <video id="video" controls preload="metadata" playsinline>
       <source src="videos/CBT%20learning%20Tool3.mp4" type="video/mp4">
-      Your browser does not support HTML5 video.
     </video>
 
     <div id="hook" class="overlay">
       CBT MANUAL ITU<br>SUDAH KETINGGALAN
     </div>
+
+    <div id="subtitle" class="overlay"></div>
 
     <div id="cta" class="overlay">
       KOMENTAR “CBT”
@@ -87,19 +98,37 @@ video {
 
 <script>
 const video = document.getElementById("video");
-const hook  = document.getElementById("hook");
-const cta   = document.getElementById("cta");
+const hook = document.getElementById("hook");
+const cta = document.getElementById("cta");
+const subtitle = document.getElementById("subtitle");
+
+/* Subtitle timeline */
+const subtitles = [
+  { start: 2, end: 4, text: "Bikin soal CBT manual itu ribet." },
+  { start: 4, end: 6, text: "Setting jawaban, scoring, waktu…" },
+  { start: 6, end: 9, text: "Di sini semuanya dipercepat." },
+  { start: 9, end: 12, text: "Trainer & guru sudah pakai ini." }
+];
 
 video.addEventListener("timeupdate", () => {
   const t = video.currentTime;
 
-  // Hook 0–2s
+  /* Hook */
   hook.style.display = (t >= 0 && t <= 2) ? "block" : "none";
 
-  // CTA 12–15s
+  /* CTA */
   cta.style.display = (t >= 12 && t <= 15) ? "block" : "none";
 
-  // Stop at 15s
+  /* Subtitles */
+  let active = subtitles.find(s => t >= s.start && t <= s.end);
+  if (active) {
+    subtitle.textContent = active.text;
+    subtitle.style.display = "block";
+  } else {
+    subtitle.style.display = "none";
+  }
+
+  /* Stop at 15s */
   if (t >= 15) {
     video.pause();
   }
